@@ -1,5 +1,5 @@
 # infiniteJS
-## usaged
+## usage
 HTML
 ```
    <script src="/js/infinitejs.js"></script>
