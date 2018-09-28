@@ -10,8 +10,10 @@
 
 </head>
 <body>
-   Name: <input type="text" data-i-bind="name">
-    <span data-i-bind="name"></span>
+   Name: <input id="test" type="text" data-i-bind="name[0]">
+    <span data-i-bind="name[0]"></span>
+    <input type="text" data-i-bind="name.last">
+    <span data-i-bind="name[2]"></span>
    Date: <input type="date" data-i-bind="date">
     <span data-i-bind="date"></span>
 </body>

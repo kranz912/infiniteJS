@@ -1,26 +1,29 @@
-var scope ={};
+
+
+var rootScope ={}; 
 var infinite = (function(){
     return{
         load:load
     };
-    function init(){
+    function init(controller){
+        rootScope[controller] = {};
         var elements = document.querySelectorAll('[data-i-bind]');
         elements.forEach(function(element){
             var propToBind = element.getAttribute('data-i-bind');
             addScopeProp(propToBind);
             element.addEventListener("change",function(){
-               scope[propToBind] = element.value;
+                rootScope[controller][propToBind] = element.value;
             });
             element.addEventListener("keyup",function(){
-                scope[propToBind] = element.value;
+                rootScope[controller][propToBind] = element.value;
             });
         });
         function addScopeProp(prop){
-            if(!scope.hasOwnProperty(prop)){
+            if(!rootScope[controller].hasOwnProperty(prop)){
                 var value;
                 Object.defineProperty
                 (
-                    scope,
+                    rootScope[controller],
                     prop, 
                     {
                     set: function(newValue){
@@ -31,6 +34,7 @@ var infinite = (function(){
                                 element.innerHTML = newValue;
                             }
                         });
+                        console.log('test');
                     },
                     get: function(){
                         return value;
@@ -39,10 +43,14 @@ var infinite = (function(){
                 });
             }
         }
+   
     }
-    function load(){
+    
+    
+
+    function load(controller){
         document.addEventListener("DOMContentLoaded",function(){
-            init();
+            init(controller);
             
         });
     }

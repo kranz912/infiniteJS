@@ -1,4 +1,4 @@
-infinite.load();
+infinite.load('main');
 
 
 
