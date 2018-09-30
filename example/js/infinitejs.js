@@ -3,21 +3,26 @@
 var rootScope ={}; 
 var infinite = (function(){
     return{
-        load:load
+        controller:controller
     };
-    function init(controller){
+
+    
+    function init(controller,vmmodels){
         rootScope[controller] = {};
-        var elements = document.querySelectorAll('[data-i-bind]');
-        elements.forEach(function(element){
-            var propToBind = element.getAttribute('data-i-bind');
+        vmmodels.forEach(vmmodel => {
+            var propToBind = vmmodel.getAttribute('data-i-bind');
             addScopeProp(propToBind);
-            element.addEventListener("change",function(){
-                rootScope[controller][propToBind] = element.value;
+    
+            vmmodel.addEventListener('change',function(){
+                rootScope[controller][propToBind] = vmmodel.value;
+                console.log('test1');
             });
-            element.addEventListener("keyup",function(){
-                rootScope[controller][propToBind] = element.value;
+            vmmodel.addEventListener('keyup',function(){
+                rootScope[controller][propToBind] = vmmodel.value;
             });
+    
         });
+
         function addScopeProp(prop){
             if(!rootScope[controller].hasOwnProperty(prop)){
                 var value;
@@ -28,13 +33,13 @@ var infinite = (function(){
                     {
                     set: function(newValue){
                         value = newValue;
-                        elements.forEach(function(element){
+                        console.log('test');
+                        vmmodels.forEach(function(element){
                             if(element.getAttribute('data-i-bind')=== prop){
                                 element.value= newValue;
                                 element.innerHTML = newValue;
                             }
                         });
-                        console.log('test');
                     },
                     get: function(){
                         return value;
@@ -47,16 +52,21 @@ var infinite = (function(){
     }
     
     
-
-    function load(controller){
-        document.addEventListener("DOMContentLoaded",function(){
-            init(controller);
-            
-        });
-    }
     //not yet implemented
     function controller(controllername, controllerfunction){
-       var elements = document.querySelectorAll('[data-i-controller="'+controllername+'"]');
+        document.addEventListener('DOMContentLoaded',function(){
+            var controllerElement = document.querySelectorAll('[data-i-controller="'+controllername+'"]');
+            console.log(controllerElement);
+            controllerElement.forEach(function(element){
+                
+               var vmmodels= element.querySelectorAll('[data-i-bind]');
+
+               init(controllername,vmmodels);
+               console.log(element);
+            });
+           controllerfunction();
+        });
+
     }
 })();
 

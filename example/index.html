@@ -10,11 +10,13 @@
 
 </head>
 <body>
-   Name: <input id="test" type="text" data-i-bind="name[0]">
-    <span data-i-bind="name[0]"></span>
-    <input type="text" data-i-bind="name.last">
-    <span data-i-bind="name[2]"></span>
-   Date: <input type="date" data-i-bind="date">
-    <span data-i-bind="date"></span>
+    <div data-i-controller="main">
+        Name: <input id="test" type="text" data-i-bind="name">
+        <span data-i-bind="name"></span>
+    </div>
+    <div data-i-controller="sub">
+            Name: <input id="test" type="text" data-i-bind="name">
+            <span data-i-bind="name"></span>
+    </div>
 </body>
 </html>
