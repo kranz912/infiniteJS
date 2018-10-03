@@ -4,21 +4,24 @@ var infinite = (function(){
     return{
         controller:controller
     };
-    function init(controller,vmmodels){
+    function init(controller){
         rootScope[controller] = {};
-        vmmodels.forEach(vmmodel => {
-            var propToBind = vmmodel.getAttribute('data-i-bind');
-            addScopeProp(propToBind);
-            vmmodel.addEventListener('change',function(){
-                rootScope[controller][propToBind] = vmmodel.value;
+        var controllerElement = document.querySelector('[data-i-controller="'+controller+'"]');
+        
+            var vmmodels= controllerElement.querySelectorAll('[data-i-bind]');
+            vmmodels.forEach(vmmodel => {
+                var propToBind = vmmodel.getAttribute('data-i-bind');
+                addScopeProp(propToBind,vmmodels);
+                vmmodel.addEventListener('change',function(){
+                    rootScope[controller][propToBind] = vmmodel.value;
+                });
+                vmmodel.addEventListener('keyup',function(){
+                    rootScope[controller][propToBind] = vmmodel.value;
+                });
+        
             });
-            vmmodel.addEventListener('keyup',function(){
-                rootScope[controller][propToBind] = vmmodel.value;
-            });
-    
-        });
-
-        function addScopeProp(prop){
+          //  
+        function addScopeProp(prop,vmmodels){
             if(!rootScope[controller].hasOwnProperty(prop)){
                 var value;
                 Object.defineProperty
@@ -35,6 +38,7 @@ var infinite = (function(){
                    
                             }
                         });
+                        repeaterhandler(controllerElement);
                     },
                     get: function(){
                         return value;
@@ -47,18 +51,14 @@ var infinite = (function(){
     }
     function controller(controllername, controllerfunction){
         document.addEventListener('DOMContentLoaded',function(){
-            var controllerElement = document.querySelectorAll('[data-i-controller="'+controllername+'"]');
-            controllerElement.forEach(function(element){
-               var vmmodels= element.querySelectorAll('[data-i-bind]');
-               init(controllername,vmmodels);
-               repeaterhandler(element,controllername);
-            });
+            init(controllername);
            controllerfunction(rootScope[controllername]);
 
         });
     }
-    function repeaterhandler(controllerElement, controllername){
+    function repeaterhandler(controllerElement){
         var repeaters = controllerElement.querySelectorAll('[data-i-repeat]');
+        var controllername  = controllerElement.getAttribute('data-i-controller');
         if(typeof(rootScope)!=='undefined'){
           if(typeof(rootScope[controllername]!=='undefined')){
             var scope = rootScope[controllername];
@@ -70,7 +70,7 @@ var infinite = (function(){
                 var metadata = repeaterattrb.split(' ');
                 console.log(scope['y']);
                 if(Array.isArray()){
-                    console.log('test');
+                   console.log
                 }
               }  
             });
